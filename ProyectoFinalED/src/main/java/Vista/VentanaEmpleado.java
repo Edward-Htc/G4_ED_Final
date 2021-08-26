@@ -5,6 +5,11 @@
  */
 package Vista;
 
+import Modelo.ColaPrioridadSolicitud;
+import Modelo.Empleado;
+import Modelo.Solicitud;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,12 +17,22 @@ import javax.swing.JOptionPane;
  * @author usuario
  */
 public class VentanaEmpleado extends javax.swing.JFrame {
-
-    /**
+    ColaPrioridadSolicitud cps; 
+    /*
      * Creates new form VentanaEmpleado
      */
-    public VentanaEmpleado() {
-        initComponents();
+    public VentanaEmpleado() throws Exception {   
+        this.cps = new ColaPrioridadSolicitud(5);
+        initComponents();        
+    }
+    
+    public void limpiar(){
+        campo_id.setText("");
+        campo_nombre_empleado.setText("");
+        campo_apellido_empleado.setText("");
+        box_area.setSelectedIndex(0);
+        box_prioridad.setSelectedIndex(0);
+        area_mensaje.setText("");
     }
 
     /**
@@ -44,8 +59,8 @@ public class VentanaEmpleado extends javax.swing.JFrame {
         campo_apellido_empleado = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        box_prioridad = new javax.swing.JComboBox<>();
-        box_area = new javax.swing.JComboBox<>();
+        box_prioridad = new javax.swing.JComboBox();
+        box_area = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -129,14 +144,15 @@ public class VentanaEmpleado extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Prioridad:");
 
+        box_prioridad.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
+
+        box_area.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Area 1", "Area 2", "Area 3", "Area 4" }));
+        box_area.setName(""); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(boton_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,6 +187,10 @@ public class VentanaEmpleado extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(box_prioridad, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(boton_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,12 +235,31 @@ public class VentanaEmpleado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void boton_enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_enviarActionPerformed
+        
+        int Id = Integer.parseInt(campo_id.getText());
+        String nombre = campo_nombre_empleado.getText();
+        String apellido = campo_apellido_empleado.getText();
+        String area = box_area.getSelectedItem().toString().toLowerCase();
+        int prioridad = Integer.parseInt(box_prioridad.getSelectedItem().toString().toLowerCase());        
+        String mensaje = area_mensaje.getText();
+        
+        
         // TODO add your handling code here:
         int rpt = JOptionPane.showConfirmDialog(null,"¿Esta seguro de enviar esta solicitud?","Confirmacion de envio",JOptionPane.YES_NO_OPTION);
-        if(rpt == JOptionPane.YES_OPTION){
-            area_mensaje.setText("");
-            JOptionPane.showMessageDialog(null,"Envio exitoso");
+        if (rpt == JOptionPane.YES_OPTION) {
+
+            try {
+                Solicitud sd = new Solicitud(Id, mensaje, new Empleado(nombre, apellido, area), prioridad);
+                cps.inserEnPrioridad(sd);
+            } catch (Exception ex) {
+                Logger.getLogger(VentanaEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            JOptionPane.showMessageDialog(null, "Envio exitoso");
+            
         }
+        limpiar();
+        System.out.println(cps.mostrarListaPrioridad());
     }//GEN-LAST:event_boton_enviarActionPerformed
 
     /**
@@ -253,19 +292,23 @@ public class VentanaEmpleado extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new VentanaEmpleado().setVisible(true);
+                try {
+                    new VentanaEmpleado().setVisible(true);
+                } catch (Exception ex) {
+                    Logger.getLogger(VentanaEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea area_mensaje;
+    public javax.swing.JTextArea area_mensaje;
     private javax.swing.JButton boton_enviar;
-    private javax.swing.JComboBox<String> box_area;
-    private javax.swing.JComboBox<String> box_prioridad;
-    private javax.swing.JTextField campo_apellido_empleado;
-    private javax.swing.JTextField campo_id;
-    private javax.swing.JTextField campo_nombre_empleado;
+    public javax.swing.JComboBox box_area;
+    public javax.swing.JComboBox box_prioridad;
+    public javax.swing.JTextField campo_apellido_empleado;
+    public javax.swing.JTextField campo_id;
+    public javax.swing.JTextField campo_nombre_empleado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
