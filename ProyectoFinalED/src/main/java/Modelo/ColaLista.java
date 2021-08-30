@@ -32,16 +32,21 @@ public class ColaLista
         fin = a;
     }
     // quitar: sale el elemento frente
-    public Object quitar()throws Exception
+    public Object quitar() //throws Exception
     { 
-      Object aux;
-      if (!colaVacia())
+      Object aux = null;
+      if (!colaVacia() && frente != fin)
       {
         aux = frente.elemento;
         frente = frente.siguiente;
       }
-      else 
-        throw new Exception("No se puede eliminar de una cola vacía");
+      else if(!colaVacia() && frente == fin){
+          aux = frente.elemento;
+          frente = null;
+          fin = null;
+      }
+      //else 
+        //throw new Exception("No se puede eliminar de una cola vacía");
       return aux;
     }
     // libera todos los nodos de la cola
@@ -54,12 +59,13 @@ public class ColaLista
       System.gc();
     } 
     // acceso al primero de la cola
-    public Object frenteCola() throws Exception
+    public Object frenteCola()// throws Exception
     {
+        /*
       if (colaVacia())
       {
         throw new Exception("Error: cola vacía");
-      } 
+      } */
       return (frente.elemento);
     }
     // verificación del estado de la cola
@@ -77,5 +83,23 @@ public class ColaLista
         }
         return colaLista;
     }
+
+    public Nodo getFrente() {
+        return frente;
+    }
+
+    public void setFrente(Nodo frente) {
+        this.frente = frente;
+    }
+
+    public Nodo getFin() {
+        return fin;
+    }
+
+    public void setFin(Nodo fin) {
+        this.fin = fin;
+    }
+    
+    
 
   }

@@ -28,9 +28,11 @@ public class TestCola {
         c.inserEnPrioridad(s7);
         System.out.println(c.mostrarListaPrioridad());
 //        System.out.println("elemento minimo: \n"+c.elementoMin().toString());
-//        c.quitarMin();
+          System.out.println(c.quitarMin());
 //        System.out.println("\n");
+          System.out.println(c.quitarMin());  
 //        System.out.println("elemento minimo: \n"+c.elementoMin().toString());
+          System.out.println(c.quitarMin());
 //        c.quitarMin();
 //        System.out.println("\n");
 //        System.out.println("elemento minimo: \n"+c.elementoMin().toString());

@@ -7,7 +7,10 @@ package Vista;
 
 import Modelo.ColaPrioridadSolicitud;
 import Modelo.Empleado;
+import Modelo.Nodo;
 import Modelo.Solicitud;
+import java.io.*;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -17,13 +20,52 @@ import javax.swing.JOptionPane;
  * @author usuario
  */
 public class VentanaEmpleado extends javax.swing.JFrame {
-    ColaPrioridadSolicitud cps; 
+    File base_solicitudes = new File("d:\\solicitudes.txt");
+    static ColaPrioridadSolicitud cps = new ColaPrioridadSolicitud(5); 
     /*
      * Creates new form VentanaEmpleado
      */
     public VentanaEmpleado() throws Exception {   
-        this.cps = new ColaPrioridadSolicitud(5);
-        initComponents();        
+        initComponents();
+        area_mensaje.setLineWrap(true);
+        area_mensaje.setWrapStyleWord(true);
+        
+        if(!base_solicitudes.exists()){
+            base_solicitudes.createNewFile();
+        }
+        else{
+            Scanner sc = null;
+            sc = new Scanner(base_solicitudes);
+            String cadena,nom="",ape="",area="",msj="";
+            
+            int id =0,prioridad=0;
+            cadena = "";
+            
+            while(sc.hasNext()){
+                msj= "";
+                cadena = sc.nextLine();
+                id = Integer.parseInt(cadena);
+                cadena = sc.nextLine();
+                prioridad = Integer.parseInt(cadena);
+                cadena = sc.nextLine();
+                nom = cadena;
+                cadena = sc.nextLine();
+                ape = cadena;
+                cadena = sc.nextLine();
+                area = cadena;
+                cadena = sc.nextLine();
+                while(cadena.compareTo("") != 0){
+                    msj += cadena;
+                    cadena = sc.nextLine();
+                }
+                
+                if(cadena != null){
+                    Solicitud solic = new Solicitud(id, msj,new Empleado(nom, ape, area), prioridad);
+                    cps.inserEnPrioridad(solic);
+                }           
+            }
+            sc.close();
+        }    
     }
     
     public void limpiar(){
@@ -61,6 +103,7 @@ public class VentanaEmpleado extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         box_prioridad = new javax.swing.JComboBox();
         box_area = new javax.swing.JComboBox();
+        boton_salir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -90,6 +133,7 @@ public class VentanaEmpleado extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(55, 66, 97));
 
         area_mensaje.setColumns(20);
+        area_mensaje.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         area_mensaje.setRows(5);
         jScrollPane1.setViewportView(area_mensaje);
 
@@ -144,10 +188,22 @@ public class VentanaEmpleado extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Prioridad:");
 
-        box_prioridad.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
+        box_prioridad.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Muy Baja", "Baja", "Media", "Alta", "Muy Alta", " " }));
 
-        box_area.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Area 1", "Area 2", "Area 3", "Area 4" }));
+        box_area.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ventas", "Produccion", "RRHH", "Finanzas" }));
         box_area.setName(""); // NOI18N
+
+        boton_salir.setBackground(new java.awt.Color(209, 10, 72));
+        boton_salir.setFont(new java.awt.Font("Yu Gothic Medium", 1, 18)); // NOI18N
+        boton_salir.setForeground(new java.awt.Color(255, 255, 255));
+        boton_salir.setText("Salir");
+        boton_salir.setBorderPainted(false);
+        boton_salir.setMargin(new java.awt.Insets(5, 14, 2, 14));
+        boton_salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_salirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -156,6 +212,11 @@ public class VentanaEmpleado extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(boton_salir, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(boton_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(41, Short.MAX_VALUE))
@@ -187,10 +248,6 @@ public class VentanaEmpleado extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(box_prioridad, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(boton_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -209,11 +266,13 @@ public class VentanaEmpleado extends javax.swing.JFrame {
                     .addComponent(jLabel6)
                     .addComponent(box_area, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(box_prioridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(boton_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(boton_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(boton_salir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -239,17 +298,38 @@ public class VentanaEmpleado extends javax.swing.JFrame {
         int Id = Integer.parseInt(campo_id.getText());
         String nombre = campo_nombre_empleado.getText();
         String apellido = campo_apellido_empleado.getText();
-        String area = box_area.getSelectedItem().toString().toLowerCase();
-        int prioridad = Integer.parseInt(box_prioridad.getSelectedItem().toString().toLowerCase());        
-        String mensaje = area_mensaje.getText();
+        String area = box_area.getSelectedItem().toString();
+        String prioridad = box_prioridad.getSelectedItem().toString();        
+        String mensaje = area_mensaje.getText().replace("\n","\r\n");
         
         
         // TODO add your handling code here:
         int rpt = JOptionPane.showConfirmDialog(null,"¿Esta seguro de enviar esta solicitud?","Confirmacion de envio",JOptionPane.YES_NO_OPTION);
         if (rpt == JOptionPane.YES_OPTION) {
-
+            
+            int p = 0;
+            
             try {
-                Solicitud sd = new Solicitud(Id, mensaje, new Empleado(nombre, apellido, area), prioridad);
+                
+                switch(prioridad){
+                    case "Muy Baja":
+                        p = 5;
+                        break;
+                    case "Baja":
+                        p = 4;
+                        break;
+                    case "Media":
+                        p = 3;
+                        break;
+                    case "Alta":
+                        p = 2;
+                        break;    
+                    case "Muy Alta":
+                        p = 1;
+                        break;                           
+                }
+                               
+                Solicitud sd = new Solicitud(Id, mensaje, new Empleado(nombre, apellido, area), p);
                 cps.inserEnPrioridad(sd);
             } catch (Exception ex) {
                 Logger.getLogger(VentanaEmpleado.class.getName()).log(Level.SEVERE, null, ex);
@@ -259,8 +339,66 @@ public class VentanaEmpleado extends javax.swing.JFrame {
             
         }
         limpiar();
-        System.out.println(cps.mostrarListaPrioridad());
+        //System.out.println(cps.mostrarListaPrioridad());
     }//GEN-LAST:event_boton_enviarActionPerformed
+
+    private void boton_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_salirActionPerformed
+        // TODO add your handling code here:
+        if(cps.colaPrioridadVacia()){
+            base_solicitudes.delete();
+        }
+        else{
+            BufferedWriter reinicio;
+            try {
+                reinicio = new BufferedWriter(new FileWriter(base_solicitudes));
+                reinicio.write("");
+                reinicio.close(); 
+            } catch (IOException ex) {
+                Logger.getLogger(VentanaEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            try {
+                FileWriter escritura = new FileWriter(base_solicitudes);
+                PrintWriter solis = new PrintWriter(escritura);
+            
+                for(int i=1;i<=cps.getMaxPrioridad();i++){
+                    Nodo aux_escribir = cps.getTabla()[i].getFrente();
+                
+                    while(aux_escribir != null){
+                        Solicitud sol = (Solicitud)aux_escribir.getElemento();
+                    
+                        solis.println(sol.getId());
+                        solis.println(sol.getPrioridad());
+                        solis.println(sol.getEmpleado().getNombre());
+                        solis.println(sol.getEmpleado().getApellido());
+                        solis.println(sol.getEmpleado().getArea());
+                        solis.println(sol.getMensaje());
+                        solis.println(""); 
+                        
+                        aux_escribir = aux_escribir.getSiguiente();
+                    }
+                }
+                solis.close();
+            
+                } catch (IOException ex) {
+                    Logger.getLogger(VentanaEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            cps.vaciarColaPrioridadVacia();
+        }
+        
+        
+        VentanaPrincipal vp = new VentanaPrincipal();
+        vp.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_boton_salirActionPerformed
+
+    public static ColaPrioridadSolicitud getCps() {
+        return cps;
+    }
+
+    public static void setCps(ColaPrioridadSolicitud cps) {
+        VentanaEmpleado.cps = cps;
+    }
 
     /**
      * @param args the command line arguments
@@ -304,6 +442,7 @@ public class VentanaEmpleado extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTextArea area_mensaje;
     private javax.swing.JButton boton_enviar;
+    private javax.swing.JButton boton_salir;
     public javax.swing.JComboBox box_area;
     public javax.swing.JComboBox box_prioridad;
     public javax.swing.JTextField campo_apellido_empleado;
