@@ -274,6 +274,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error!! No se encontro el archivo solicitudes.txt");
             } catch (IOException ex) {
                 Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
             }    

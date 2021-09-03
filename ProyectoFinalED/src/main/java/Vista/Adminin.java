@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class Adminin extends javax.swing.JFrame {
     DefaultTableModel modelo;
@@ -62,6 +63,7 @@ public class Adminin extends javax.swing.JFrame {
             sc.close();       
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Adminin.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error!! No se encontro el archivo solicitudes.txt");
         } catch (Exception ex) {
             Logger.getLogger(Adminin.class.getName()).log(Level.SEVERE, null, ex);
         }  
@@ -305,6 +307,7 @@ public class Adminin extends javax.swing.JFrame {
             
             } catch (IOException ex) {
                 Logger.getLogger(VentanaEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error!! No se pudo escribir correctamente en solicitudes.txt");
             }
             solicitudes.vaciarColaPrioridadVacia();           
                 

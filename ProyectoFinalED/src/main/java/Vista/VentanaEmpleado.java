@@ -25,13 +25,22 @@ public class VentanaEmpleado extends javax.swing.JFrame {
     /*
      * Creates new form VentanaEmpleado
      */
+    @SuppressWarnings("empty-statement")
     public VentanaEmpleado() throws Exception {   
         initComponents();
         area_mensaje.setLineWrap(true);
         area_mensaje.setWrapStyleWord(true);
         
         if(!base_solicitudes.exists()){
-            base_solicitudes.createNewFile();
+            try{
+                base_solicitudes.createNewFile();
+            }
+            catch(FileNotFoundException e){
+                JOptionPane.showMessageDialog(null, "Error!! No se pudo crear el archivo solicitudes.txt");
+            }
+            catch(IOException e){
+                JOptionPane.showMessageDialog(null, "Error!! No se encontro el archivo solicitudes.txt");
+            }
         }
         else{
             Scanner sc = null;
@@ -333,6 +342,7 @@ public class VentanaEmpleado extends javax.swing.JFrame {
                 cps.inserEnPrioridad(sd);
             } catch (Exception ex) {
                 Logger.getLogger(VentanaEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error!! esta prioridad no esta definida");
             }
 
             JOptionPane.showMessageDialog(null, "Envio exitoso");
@@ -382,6 +392,7 @@ public class VentanaEmpleado extends javax.swing.JFrame {
             
                 } catch (IOException ex) {
                     Logger.getLogger(VentanaEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, "Error!! No se pudo escribir correctamente en solicitudes.txt");
                 }
             cps.vaciarColaPrioridadVacia();
         }
